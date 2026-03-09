@@ -76,3 +76,6 @@ Reflecting back on the “Security Snapshot” page, we generated a pcap, the UR
 To test this, we can change this number, and monitor the results. In the case the object is invalid, we are redirected to the dashboard, 
 however, when we set the number to “0”, we are given a valid capture file that we are able to download. 
 
+<img width="1464" height="848" alt="wireshark" src="https://github.com/user-attachments/assets/352ca591-b42c-421d-b23a-fd6227f064d6" />
+
+
