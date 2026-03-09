@@ -9,6 +9,7 @@ Using the credentials, we are able to SSH into the machine, and read user.txt.
 Through automated, local enumeration, we learn a system package is incorrectly configured to allow setuid. Using this knowledge, we are able to exploit the package to get a shell as root – gaining access to root.txt.
 
 **Let's jump in and start to hack !:)
+#Enumeration
 
 We are using network map scanner with aggressive mode recon for service and version number.
 
@@ -94,5 +95,8 @@ INSTERT IMAGE
   Since FTP is a clear-text protocol, we know there may be credentials captured that we can get. To check this, we set the display filter to “ftp”. Once we set the filter, within the first few packets, we see credentials for the **nathan** user.
 
 <img width="1464" height="848" alt="wireshark" src="https://github.com/user-attachments/assets/352ca591-b42c-421d-b23a-fd6227f064d6" />
+#Inicial acces
+Credentials: Nathan : Buck3tH4TF0RM3!
 
+This Pcap file has username and password for FTP service. Let’s use these credentials to login via SSH and read the user flag.
 
