@@ -70,9 +70,9 @@ Progress: 29999 / 29999 (100.00%)
 ```
 <img width="1159" height="402" alt="gobuster" src="https://github.com/user-attachments/assets/14ed6605-b226-4c20-a167-ea550a32905c" />
 
-Since we did not find any further results from our automated tools, we decide to dig deeper into the web pages. 
+ Since we did not find any further results from our automated tools, we decide to dig deeper into the web pages. 
 Reflecting back on the “Security Snapshot” page, we generated a pcap, the URL path was /data/1. 
-This suggests a possible **Insecure Direct Object Reference (IDOR)** vulnerability may exist, if there is no authorization checks around the request. 
+ This suggests a possible **Insecure Direct Object Reference (IDOR)** vulnerability may exist, if there is no authorization checks around the request. 
 To test this, we can change this number, and monitor the results. In the case the object is invalid, we are redirected to the dashboard, 
 however, when we set the number to “0”, we are given a valid capture file that we are able to download. 
 
