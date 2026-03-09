@@ -34,11 +34,7 @@ Next, we enumerate port 80 using tools like **gobuster and ffuf**. Unfortunately
 
 
 Going to the webserver in a browser, we are presented with a website that appears to host several local network tools.
-Ports (To-Try List): 
-80 -port try ==> gobuster, ffuf no enumerat files and dirs
-21 -port ftp try to login nathan with Buck3tH4TF0RM3!
-22 -port SSH try same cred to login
-
+```
 nmap result here:
 root@kali:~/Labs/HTB/Easy-HTB/HTB-CAP]
 nmap -A -T4 -sS -sCV -p- --open -oN nmap/all_tcp.md $ip
@@ -62,7 +58,7 @@ OS CPE: cpe:/o:linux:linux_kernel:5 cpe:/o:mikrotik:routeros:7 cpe:/o:linux:linu
 OS details: Linux 5.0 - 5.14, MikroTik RouterOS 7.2 - 7.5 (Linux 5.6.3)
 Network Distance: 2 hops
 Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
-
+```
 TRACEROUTE (using port 22/tcp)
 HOP RTT      ADDRESS
 1   20.95 ms 10.10.14.1
