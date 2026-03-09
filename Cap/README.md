@@ -24,20 +24,14 @@ Device type: general purpose|router
 ```
 <img width="808" height="471" alt="nmapscan" src="https://github.com/user-attachments/assets/fcd4038f-744e-427c-a1ba-344cf0c24edc" />
 
-OS: Linux
+Since FTP is running, we attempt to log in anonymously, however, this is disabled. 
+Next, we enumerate port 80 using tools like gobuster and nikto. Unfortunately, these tools do not yield any useful results.
+<img width="1102" height="641" alt="fuffdirscan" src="https://github.com/user-attachments/assets/84e6d7f8-d510-47db-a30a-9348e4ab91b8" />
+<img width="1159" height="402" alt="gobuster" src="https://github.com/user-attachments/assets/14ed6605-b226-4c20-a167-ea550a32905c" />
 
-Web-Technology:
 
-IP:10.10.10.10
 
-USERS: root, nathan
-
-CREDENTIALS (ANY): Buck3tH4TF0RM3! ,
-Flas:
-```
-1. ce3f90fe646c14a033f2cff997f3b5c4
-2. 1d96b9552d8caefcd6e857075c0cc138
-```
+Going to the webserver in a browser, we are presented with a website that appears to host several local network tools.
 Ports (To-Try List): 
 80 -port try ==> gobuster, ffuf no enumerat files and dirs
 21 -port ftp try to login nathan with Buck3tH4TF0RM3!
