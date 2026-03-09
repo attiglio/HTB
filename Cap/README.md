@@ -1,7 +1,4 @@
-Let's have a look at the website first. We can run different tools, we can see ipconfig, netstat and we can capture pcap files for five seconds and download them afterwards. A lot to look at but there wasn't any command injection or anything similar possible.
-
-However we noticed, that after we captured our pcap file we get redirected to /data/1 to download it. So what's /data/0 ?
-
+To solve this machine, we begin by enumerating open ports – finding ports 21, 22, and 80 open. On the webserver, we are able to exploit an Insecure Direct Object Reference (IDOR) vulnerability to obtain system credentials as the nathan user. Using the credentials, we are able to SSH into the machine, and read user.txt. Through automated, local enumeration, we learn a system package is incorrectly configured to allow setuid. Using this knowledge, we are able to exploit the package to get a shell as root – gaining access to root.txt.
 Nmap scan result :
 
 <img width="808" height="471" alt="nmapscan" src="https://github.com/user-attachments/assets/fcd4038f-744e-427c-a1ba-344cf0c24edc" />
