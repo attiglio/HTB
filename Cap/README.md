@@ -8,7 +8,8 @@ On the webserver, we are able to exploit an *Insecure Direct Object Reference (I
 Using the credentials, we are able to SSH into the machine, and read user.txt. 
 Through automated, local enumeration, we learn a system package is incorrectly configured to allow setuid. Using this knowledge, we are able to exploit the package to get a shell as root – gaining access to root.txt.
 
-Nmap scan result :
+We are using network map scanner with aggressive mode recon for service and version number
+Nmap scan terminal result :
 ```
 nmap/nmap -A -T4 -sS -sCV -p- --open -oN nmap/all_tcp.md 10.129.3.102
 Nmap scan report for 10.129.3.102
@@ -22,16 +23,18 @@ PORT   STATE SERVICE VERSION
 |_http-title: Security Dashboard
 Device type: general purpose|router
 ```
+Nmap printscreen result :
+
 <img width="808" height="471" alt="nmapscan" src="https://github.com/user-attachments/assets/fcd4038f-744e-427c-a1ba-344cf0c24edc" />
 
 
 Since FTP is running, we attempt to log in anonymously, however, this is disabled. 
-Next, we enumerate port 80 using tools like **gobuster and ffuf**. Unfortunately, these tools do not yield any useful results.
+Next, we enumerate port 80 using tools like **gobuster and ffuf**. 
 
-FFUF directory scan result using raft-medium-directories list :
+We are using FFUF scanner to directory fuzzing with raft-medium-directories list :
+Fuzzing Fuff terminal result :
 
 ```
-
 ffuf -u http://10.129.3.102/FUZZ -w /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt -c -v -o gobuster/ffufdir.md
  :: Method           : GET
  :: URL              : http://10.129.3.102/FUZZ
@@ -45,9 +48,12 @@ ________________________________________________
 | --> | http://10.129.3.102/data/3
     * FUZZ: capture
 ```
+Fuzzing with FFuf printscreen result :
+
 <img width="1102" height="641" alt="fuffdirscan" src="https://github.com/user-attachments/assets/84e6d7f8-d510-47db-a30a-9348e4ab91b8" />
 
-Gobuster directory scan result using raft-medium-directories list :
+We are using Gobuster scanner for directory fuzzing with raft-medium-directories list :
+Fuzzing gobuster terminal result:
 
 ```
 gobuster dir -u http://10.129.3.102/ -w /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt -t 20 -o gobuster/gobusterdir.md
@@ -68,13 +74,21 @@ capture              (Status: 302) [Size: 220] [--> http://10.129.3.102/data/1]
 Progress: 29999 / 29999 (100.00%)
 ===============================================================
 ```
+
+Fuzzing gobuster print screen result :
+
 <img width="1159" height="402" alt="gobuster" src="https://github.com/user-attachments/assets/14ed6605-b226-4c20-a167-ea550a32905c" />
 
  Since we did not find any further results from our automated tools, we decide to dig deeper into the web pages. 
+
 Reflecting back on the “Security Snapshot” page, we generated a pcap, the URL path was /data/1. 
+ 
  This suggests a possible **Insecure Direct Object Reference (IDOR)** vulnerability may exist, if there is no authorization checks around the request. 
+
 To test this, we can change this number, and monitor the results. In the case the object is invalid, we are redirected to the dashboard, 
 however, when we set the number to “0”, we are given a valid capture file that we are able to download. 
+
+INSTERT IMAGE
 
  After we download the capture file, we open it in a packet analysis tool, such as **Wireshark**. To help hunt for interesting information, we open the “Statistics” menu, and launch the Protocol Hierarchy window. In it, we see there are FTP packets that were captured. 
   Since FTP is a clear-text protocol, we know there may be credentials captured that we can get. To check this, we set the display filter to “ftp”. Once we set the filter, within the first few packets, we see credentials for the **nathan** user.
