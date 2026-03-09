@@ -8,9 +8,10 @@ On the webserver, we are able to exploit an *Insecure Direct Object Reference (I
 Using the credentials, we are able to SSH into the machine, and read user.txt. 
 Through automated, local enumeration, we learn a system package is incorrectly configured to allow setuid. Using this knowledge, we are able to exploit the package to get a shell as root – gaining access to root.txt.
 
-**Let's jump in and start to hack !:)**
+**Let's jump in and start to hack !:)
 
-We are using network map scanner with aggressive mode recon for service and version number
+We are using network map scanner with aggressive mode recon for service and version number.
+
 Nmap scan terminal result :
 ```
 nmap/nmap -A -T4 -sS -sCV -p- --open -oN nmap/all_tcp.md 10.129.3.102
@@ -25,15 +26,15 @@ PORT   STATE SERVICE VERSION
 |_http-title: Security Dashboard
 Device type: general purpose|router
 ```
-Nmap printscreen result :
+Nmap scan printscreen result :
 
 <img width="808" height="471" alt="nmapscan" src="https://github.com/user-attachments/assets/fcd4038f-744e-427c-a1ba-344cf0c24edc" />
 
 
-Since FTP is running, we attempt to log in anonymously, however, this is disabled. 
-Next, we enumerate port 80 using tools like **gobuster and ffuf**. 
+Next, we enumerate (fuzzing) the port 80 using tools like **gobuster and ffuf** for directory listing. 
 
-We are using FFUF scanner to directory fuzzing with raft-medium-directories list :
+We are using both fuzzing scanner with same fuzzing list to compare the result.
+First we are using FFUF scanner for directory fuzzing with raft-medium-directories list :
 Fuzzing Fuff terminal result :
 
 ```
@@ -54,7 +55,7 @@ Fuzzing with FFuf printscreen result :
 
 <img width="1102" height="641" alt="fuffdirscan" src="https://github.com/user-attachments/assets/84e6d7f8-d510-47db-a30a-9348e4ab91b8" />
 
-We are using Gobuster scanner for directory fuzzing with raft-medium-directories list :
+In second stage we are using Gobuster scanner for directory fuzzing with raft-medium-directories list :
 Fuzzing gobuster terminal result:
 
 ```
@@ -81,14 +82,11 @@ Fuzzing gobuster print screen result :
 
 <img width="1159" height="402" alt="gobuster" src="https://github.com/user-attachments/assets/14ed6605-b226-4c20-a167-ea550a32905c" />
 
- Since we did not find any further results from our automated tools, we decide to dig deeper into the web pages. 
-
+ Both fuzzing scanner give a same result .Since we did not find any further results from our automated tools.We decide to dig deeper into the web pages. 
 Reflecting back on the “Security Snapshot” page, we generated a pcap, the URL path was /data/1. 
- 
  This suggests a possible **Insecure Direct Object Reference (IDOR)** vulnerability may exist, if there is no authorization checks around the request. 
-
 To test this, we can change this number, and monitor the results. In the case the object is invalid, we are redirected to the dashboard, 
-however, when we set the number to “0”, we are given a valid capture file that we are able to download. 
+ however, when we set the number to “0”, we are given a valid capture file that we are able to download. 
 
 INSTERT IMAGE
 
