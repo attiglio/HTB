@@ -1,7 +1,8 @@
 
 <img width="507" height="286" alt="banner" src="https://github.com/user-attachments/assets/79800b1f-9bc4-449e-a2e1-b11900879d12" />
 
-Easy Hackthebox challange machine 
+# Easy Hackthebox challange machine.
+
 To solve this **machine**, we begin by enumerating open ports – finding ports *21, 22, and 80* open. 
 On the webserver, we are able to exploit an *Insecure Direct Object Reference (IDOR)* vulnerability to obtain system credentials as the nathan user. 
 Using the credentials, we are able to SSH into the machine, and read user.txt. 
