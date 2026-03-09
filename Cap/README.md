@@ -22,7 +22,7 @@ Nmap scan printscreen result :
 Next, we enumerate (fuzzing) the port 80 using tools like **gobuster and ffuf** for directory listing. 
 
 We are using both fuzzing scanner with same fuzzing list to compare the result.
-First we are using FFUF scanner for directory fuzzing with raft-medium-directories list :
+ First we are using FFUF scanner for directory fuzzing with raft-medium-directories list :
 
 Fuzzing with FFuf printscreen result :
 
