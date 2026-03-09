@@ -1,4 +1,4 @@
-To solve this *machine*, we begin by enumerating open ports – finding ports *21, 22, and 80* open. 
+To solve this **machine**, we begin by enumerating open ports – finding ports *21, 22, and 80* open. 
 On the webserver, we are able to exploit an *Insecure Direct Object Reference (IDOR)* vulnerability to obtain system credentials as the nathan user. 
 Using the credentials, we are able to SSH into the machine, and read user.txt. 
 Through automated, local enumeration, we learn a system package is incorrectly configured to allow setuid. Using this knowledge, we are able to exploit the package to get a shell as root – gaining access to root.txt.
