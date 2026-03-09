@@ -28,12 +28,38 @@ Device type: general purpose|router
 Since FTP is running, we attempt to log in anonymously, however, this is disabled. 
 Next, we enumerate port 80 using tools like **gobuster and ffuf**. Unfortunately, these tools do not yield any useful results.
 
+***FFUF directory scan result using raft-medium-directories list**
+
+```
+
+ffuf -u http://10.129.3.102/FUZZ -w /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt -c -v -o gobuster/ffufdir.md
+ :: Method           : GET
+ :: URL              : http://10.129.3.102/FUZZ
+ :: Wordlist         : FUZZ: /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt
+ :: Output file      : gobuster/ffufdir.md
+ :: File format      : json
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 40
+ :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
+________________________________________________
+
+[Status: 302, Size: 208, Words: 21, Lines: 4, Duration: 28ms]
+| URL | http://10.129.3.102/data
+| --> | http://10.129.3.102/
+    * FUZZ: data
+
+[Status: 200, Size: 17454, Words: 7275, Lines: 355, Duration: 54ms]
+| URL | http://10.129.3.102/ip
+    * FUZZ: ip
+
+[Status: 302, Size: 220, Words: 21, Lines: 4, Duration: 5178ms]
+| URL | http://10.129.3.102/capture
+| --> | http://10.129.3.102/data/3
+    * FUZZ: capture
+```
 <img width="1102" height="641" alt="fuffdirscan" src="https://github.com/user-attachments/assets/84e6d7f8-d510-47db-a30a-9348e4ab91b8" />
-<img width="1159" height="402" alt="gobuster" src="https://github.com/user-attachments/assets/14ed6605-b226-4c20-a167-ea550a32905c" />
-
-
-
-Going to the webserver in a browser, we are presented with a website that appears to host several local network tools.
 
 ```
 gobuster dir -u http://10.129.3.102/ -w /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt -t 20 -o gobuster/gobusterdir.md
@@ -60,49 +86,8 @@ Finished
 ===============================================================
 ```
 
-**FFUF directory scan**
-```
-ffuf -u http://10.129.3.102/FUZZ -w /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt -c -v -o gobuster/ffufdir.md
+<img width="1159" height="402" alt="gobuster" src="https://github.com/user-attachments/assets/14ed6605-b226-4c20-a167-ea550a32905c" />
 
-        /'___\  /'___\           /'___\
-       /\ \__/ /\ \__/  __  __  /\ \__/
-       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\
-        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/
-         \ \_\   \ \_\  \ \____/  \ \_\
-          \/_/    \/_/   \/___/    \/_/
-
-       v2.1.0-dev
-________________________________________________
-
- :: Method           : GET
- :: URL              : http://10.129.3.102/FUZZ
- :: Wordlist         : FUZZ: /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt
- :: Output file      : gobuster/ffufdir.md
- :: File format      : json
- :: Follow redirects : false
- :: Calibration      : false
- :: Timeout          : 10
- :: Threads          : 40
- :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
-________________________________________________
-
-[Status: 302, Size: 208, Words: 21, Lines: 4, Duration: 28ms]
-| URL | http://10.129.3.102/data
-| --> | http://10.129.3.102/
-    * FUZZ: data
-
-[Status: 200, Size: 17454, Words: 7275, Lines: 355, Duration: 54ms]
-| URL | http://10.129.3.102/ip
-    * FUZZ: ip
-
-[Status: 302, Size: 220, Words: 21, Lines: 4, Duration: 5178ms]
-| URL | http://10.129.3.102/capture
-| --> | http://10.129.3.102/data/3
-    * FUZZ: capture
-===========================================================================
-Files / (Web Root)
-```
-as
 
 
 
