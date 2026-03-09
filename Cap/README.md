@@ -76,6 +76,9 @@ Reflecting back on the “Security Snapshot” page, we generated a pcap, the UR
 To test this, we can change this number, and monitor the results. In the case the object is invalid, we are redirected to the dashboard, 
 however, when we set the number to “0”, we are given a valid capture file that we are able to download. 
 
+ After we download the capture file, we open it in a packet analysis tool, such as **Wireshark**. To help hunt for interesting information, we open the “Statistics” menu, and launch the Protocol Hierarchy window. In it, we see there are FTP packets that were captured. 
+  Since FTP is a clear-text protocol, we know there may be credentials captured that we can get. To check this, we set the display filter to “ftp”. Once we set the filter, within the first few packets, we see credentials for the **nathan** user.
+
 <img width="1464" height="848" alt="wireshark" src="https://github.com/user-attachments/assets/352ca591-b42c-421d-b23a-fd6227f064d6" />
 
 
