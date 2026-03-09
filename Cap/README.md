@@ -1,9 +1,14 @@
-OS: Linux 
-Web-Technology: 
-IP:10.10.10.10 
+OS: Linux
+
+Web-Technology:
+
+IP:10.10.10.10
+
 USERS: root, nathan
+
 CREDENTIALS (ANY): Buck3tH4TF0RM3! ,
 Flas:
+
 1. ce3f90fe646c14a033f2cff997f3b5c4
 2. 1d96b9552d8caefcd6e857075c0cc138
 
