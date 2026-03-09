@@ -1,15 +1,14 @@
-
 OS: Linux 
 Web-Technology: 
-IP: 
-USERS: cap , root , nathan
+IP:10.10.10.10 
+USERS: root, nathan
 CREDENTIALS (ANY): Buck3tH4TF0RM3! ,
-Flag:
+Flas:
 1. ce3f90fe646c14a033f2cff997f3b5c4
 2. 1d96b9552d8caefcd6e857075c0cc138
 
 Ports (To-Try List): 
-80 -port try => gobuster, ffuf no enumerat files and dirs
+80 -port try ==> gobuster, ffuf no enumerat files and dirs
 21 -port ftp try to login nathan with Buck3tH4TF0RM3!
 22 -port SSH try same cred to login
 
