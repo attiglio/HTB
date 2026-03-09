@@ -3,6 +3,7 @@ Let's have a look at the website first. We can run different tools, we can see i
 However we noticed, that after we captured our pcap file we get redirected to /data/1 to download it. So what's /data/0 ?
 
 [image]
+<img width="808" height="471" alt="nmapscan" src="https://github.com/user-attachments/assets/fcd4038f-744e-427c-a1ba-344cf0c24edc" />
 
 OS: Linux
 
