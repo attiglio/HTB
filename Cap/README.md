@@ -1,3 +1,9 @@
+Let's have a look at the website first. We can run different tools, we can see ipconfig, netstat and we can capture pcap files for five seconds and download them afterwards. A lot to look at but there wasn't any command injection or anything similar possible.
+
+However we noticed, that after we captured our pcap file we get redirected to /data/1 to download it. So what's /data/0 ?
+
+[image]
+
 OS: Linux
 
 Web-Technology:
