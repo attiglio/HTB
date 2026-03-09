@@ -28,7 +28,7 @@ Device type: general purpose|router
 Since FTP is running, we attempt to log in anonymously, however, this is disabled. 
 Next, we enumerate port 80 using tools like **gobuster and ffuf**. Unfortunately, these tools do not yield any useful results.
 
-***FFUF directory scan result using raft-medium-directories list**
+FFUF directory scan result using raft-medium-directories list :
 
 ```
 
@@ -37,29 +37,17 @@ ffuf -u http://10.129.3.102/FUZZ -w /opt/seclists/Discovery/Web-Content/raft-med
  :: URL              : http://10.129.3.102/FUZZ
  :: Wordlist         : FUZZ: /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt
  :: Output file      : gobuster/ffufdir.md
- :: File format      : json
- :: Follow redirects : false
- :: Calibration      : false
- :: Timeout          : 10
- :: Threads          : 40
- :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
 ________________________________________________
-
 [Status: 302, Size: 208, Words: 21, Lines: 4, Duration: 28ms]
 | URL | http://10.129.3.102/data
-| --> | http://10.129.3.102/
-    * FUZZ: data
-
-[Status: 200, Size: 17454, Words: 7275, Lines: 355, Duration: 54ms]
 | URL | http://10.129.3.102/ip
-    * FUZZ: ip
-
-[Status: 302, Size: 220, Words: 21, Lines: 4, Duration: 5178ms]
 | URL | http://10.129.3.102/capture
 | --> | http://10.129.3.102/data/3
     * FUZZ: capture
 ```
 <img width="1102" height="641" alt="fuffdirscan" src="https://github.com/user-attachments/assets/84e6d7f8-d510-47db-a30a-9348e4ab91b8" />
+
+Gobuster directory scan result using raft-medium-directories list :
 
 ```
 gobuster dir -u http://10.129.3.102/ -w /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt -t 20 -o gobuster/gobusterdir.md
@@ -68,10 +56,7 @@ Gobuster v3.8.2
 by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
 ===============================================================
 [+] Url:                     http://10.129.3.102/
-[+] Method:                  GET
-[+] Threads:                 20
 [+] Wordlist:                /opt/seclists/Discovery/Web-Content/raft-medium-directories.txt
-[+] Negative Status codes:   404
 [+] User Agent:              gobuster/3.8.2
 [+] Timeout:                 10s
 ===============================================================
@@ -82,10 +67,7 @@ ip                   (Status: 200) [Size: 17446]
 capture              (Status: 302) [Size: 220] [--> http://10.129.3.102/data/1]
 Progress: 29999 / 29999 (100.00%)
 ===============================================================
-Finished
-===============================================================
 ```
-
 <img width="1159" height="402" alt="gobuster" src="https://github.com/user-attachments/assets/14ed6605-b226-4c20-a167-ea550a32905c" />
 
 
